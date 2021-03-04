@@ -19,6 +19,19 @@ class GrowiAPIError(Exception):
 
 ##### Get Information #####
 
+# 正常に動作することを確認できていない
+def exist_page(base_url: str, api_token: str, page_path: str) -> bool:
+    """
+    [Experiment] check existance of the spcified page
+    """
+    res = get_page_info(base_url, api_token, page_path)
+
+    if res.status_code == 200:
+        return json.loads(res.text)['ok']
+    else:
+        raise GrowiAPIError(res.text)
+
+
 def get_page_info(base_url: str, api_token: str, page_path: str) -> dict:
     """
     get page information
