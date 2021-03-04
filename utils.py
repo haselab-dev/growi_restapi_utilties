@@ -176,3 +176,20 @@ def rename_page(base_url: str, api_token: str, src_page_path: str, target_page_p
     else:
         raise GrowiAPIError(res.text)
 
+
+##### Get Tag #####
+
+def get_tag_list(base_url: str, api_token: str) -> dict:
+    """
+    get tag list
+    """
+    req_url = '{}{}'.format(base_url, '/_api/tags.list')
+    params = {
+        'access_token': f'{api_token}',
+    }
+
+    res = requests.get(req_url, params=params)
+    if res.status_code == 200:
+        return json.loads(res.text)['data']
+    else:
+        raise GrowiAPIError(res.text)
