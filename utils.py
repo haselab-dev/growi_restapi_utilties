@@ -41,7 +41,7 @@ def get_page_info(base_url: str, api_token: str, page_path: str) -> dict:
     res = requests.get(req_url, params=params)
 
     if res.status_code == 200:
-        return json.loads(res.text)['page']
+        return json.loads(res.text)
     else:
         raise GrowiAPIError(res.text)
 
@@ -57,7 +57,7 @@ def get_page_list_by_page(base_url: str, api_token: str, page_path: str) -> dict
     }
     res = requests.get(req_url, params=queries)
     if res.status_code == 200:
-        return json.loads(res.text)['page']
+        return json.loads(res.text)['pages']
     else:
         raise GrowiAPIError(res.text)
 
@@ -73,7 +73,7 @@ def get_page_list_by_user(base_url: str, api_token: str, user: str) -> dict:
     }
     res = requests.get(req_url, params=queries)
     if res.status_code == 200:
-        return json.loads(res.text)['page']
+        return json.loads(res.text)['pages']
     else:
         raise GrowiAPIError(res.text)
 
