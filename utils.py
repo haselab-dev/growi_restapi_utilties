@@ -166,11 +166,15 @@ def delete_page(base_url: str, api_token: str, page_path: str, recursively: bool
 
 ##### Rename Page #####
 
-def rename_page(base_url: str, api_token: str, src_page_path: str, target_page_path: str) -> dict:
+def rename_page(base_url: str, api_token: str, src_page_path: str, target_page_path: str, is_remain_meta_data: bool=True) -> dict:
     """
     rename page (change page path)
     """
-    page_info = get_page_info(base_url, api_token, src_page_path)
+    res = get_page_info(base_url, api_token, src_page_path)
+    success = res['ok']
+    if not success:     # ページの存在しない場合get_page_infoはstatus_code=200で失敗する
+        raise GrowiAPIError(res)
+    page_info = res['page']
     page_id = page_info['_id']
     revision_id = page_info['revision']['_id']
 
@@ -185,6 +189,7 @@ def rename_page(base_url: str, api_token: str, src_page_path: str, target_page_p
         'revisionId': revision_id,
         'path': src_page_path,
         'newPagePath': target_page_path,
+        'isRemainMetadata': 'true' if is_remain_meta_data else 'false',
     }
 
     res = requests.put(req_url, data=payloads, params=params)
