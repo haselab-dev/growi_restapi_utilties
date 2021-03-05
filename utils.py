@@ -215,3 +215,25 @@ def get_tag_list(base_url: str, api_token: str) -> dict:
         return json.loads(res.text)['data']
     else:
         raise GrowiAPIError(res.text)
+
+def get_tags_by_page(base_url: str, api_token: str, page_path: str) -> list:
+    """
+    get tags annotated on specified pate
+    """
+    res = get_page_info(base_url, api_token, page_path)
+    success = res['ok']
+    if not success:     # ページの存在しない場合get_page_infoはstatus_code=200で失敗する
+        raise GrowiAPIError(res)
+    page_id = res['page']['_id']
+
+    req_url = '{}{}'.format(base_url, '/_api/pages.getPageTag')
+    params = {
+        'access_token': f'{api_token}',
+        'pageId': page_id
+    }
+
+    res = requests.get(req_url, params=params)
+    if res.status_code == 200:
+        return json.loads(res.text)['tags']
+    else:
+        raise GrowiAPIError(res.text)
