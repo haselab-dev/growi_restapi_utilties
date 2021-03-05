@@ -2,6 +2,7 @@
 
 import json
 import requests
+from typing import Union
 
 
 # Growi Rest API向けのError
@@ -46,14 +47,16 @@ def get_page_info(base_url: str, api_token: str, page_path: str) -> dict:
         raise GrowiAPIError(res.text)
 
 
-def get_page_list_by_page(base_url: str, api_token: str, page_path: str) -> dict:
+def get_page_list_by_page(base_url: str, api_token: str, page_path: str, limit:Union[int, None]=None) -> dict:
     """
     get page list under the specified page path
     """
     req_url = '{}{}'.format(base_url, '/_api/pages.list')
+    limit = 1e10 if limit is None else limit
     queries = {
         'access_token': f'{api_token}',
         'path': page_path,
+        'limit': limit,
     }
     res = requests.get(req_url, params=queries)
     if res.status_code == 200:
@@ -62,14 +65,16 @@ def get_page_list_by_page(base_url: str, api_token: str, page_path: str) -> dict
         raise GrowiAPIError(res.text)
 
 
-def get_page_list_by_user(base_url: str, api_token: str, user: str) -> dict:
+def get_page_list_by_user(base_url: str, api_token: str, user: str, limit:Union[int, None]=None) -> dict:
     """
     get page list owned by specified user
     """
     req_url = '{}{}'.format(base_url, '/_api/pages.list')
+    limit = 1e10 if limit is None else limit
     queries = {
         'access_token': f'{api_token}',
         'user': user,
+        'limit': limit,
     }
     res = requests.get(req_url, params=queries)
     if res.status_code == 200:
